@@ -11,6 +11,8 @@
 		D6F4F9FB2956B74F00ECE4E5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F4F9FA2956B74F00ECE4E5 /* ContentView.swift */; };
 		D6F4F9FD2956B75200ECE4E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6F4F9FC2956B75200ECE4E5 /* Assets.xcassets */; };
 		D6F4FA002956B75200ECE4E5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6F4F9FF2956B75200ECE4E5 /* Preview Assets.xcassets */; };
+		D6F4FA072956B7A500ECE4E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D6F4FA062956B7A500ECE4E5 /* GoogleService-Info.plist */; };
+		D6F4FA0A2956B89700ECE4E5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D6F4FA092956B89700ECE4E5 /* FirebaseAnalytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,7 @@
 		D6F4F9FA2956B74F00ECE4E5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D6F4F9FC2956B75200ECE4E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D6F4F9FF2956B75200ECE4E5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D6F4FA062956B7A500ECE4E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6F4FA0A2956B89700ECE4E5 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +58,7 @@
 				D6F4F9F82956B74F00ECE4E5 /* gomokuApp.swift */,
 				D6F4F9FA2956B74F00ECE4E5 /* ContentView.swift */,
 				D6F4F9FC2956B75200ECE4E5 /* Assets.xcassets */,
+				D6F4FA062956B7A500ECE4E5 /* GoogleService-Info.plist */,
 				D6F4F9FE2956B75200ECE4E5 /* Preview Content */,
 			);
 			path = gomoku;
@@ -83,6 +88,9 @@
 			dependencies = (
 			);
 			name = gomoku;
+			packageProductDependencies = (
+				D6F4FA092956B89700ECE4E5 /* FirebaseAnalytics */,
+			);
 			productName = gomoku;
 			productReference = D6F4F9F52956B74F00ECE4E5 /* gomoku.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +119,9 @@
 				Base,
 			);
 			mainGroup = D6F4F9EC2956B74F00ECE4E5;
+			packageReferences = (
+				D6F4FA082956B89700ECE4E5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = D6F4F9F62956B74F00ECE4E5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -126,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6F4FA002956B75200ECE4E5 /* Preview Assets.xcassets in Resources */,
+				D6F4FA072956B7A500ECE4E5 /* GoogleService-Info.plist in Resources */,
 				D6F4F9FD2956B75200ECE4E5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,6 +351,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D6F4FA082956B89700ECE4E5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D6F4FA092956B89700ECE4E5 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D6F4FA082956B89700ECE4E5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D6F4F9ED2956B74F00ECE4E5 /* Project object */;
 }
