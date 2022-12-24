@@ -9,12 +9,37 @@ import Foundation
 import SwiftUI
 
 struct CrossLine: Shape{
+    var rmUp = false;
+    var rmDown = false;
+    var rmRight = false;
+    var rmLeft = false;
+    var centerDot = false;
     func path(in rect: CGRect) -> Path{
         var path = Path()
-        path.move(to: CGPoint(x: rect.maxX/2, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX/2, y: rect.minY))
-        path.move(to: CGPoint(x: rect.maxX, y: rect.maxY/2))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY/2))
+        path.move(to: CGPoint(x: rect.maxX/2, y: rect.maxY/2))
+        if(!rmUp){
+            path.addLine(to: CGPoint(x: rect.maxX/2, y: rect.minY))
+            path.move(to: CGPoint(x: rect.maxX/2, y: rect.maxY/2))
+        }
+        
+        if(!rmDown){
+            path.addLine(to: CGPoint(x: rect.maxX/2, y: rect.maxY))
+            path.move(to: CGPoint(x: rect.maxX/2, y: rect.maxY/2))
+        }
+        
+        if(!rmRight){
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY/2))
+            path.move(to: CGPoint(x: rect.maxX/2, y: rect.maxY/2))
+        }
+        
+        if(!rmLeft){
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY/2))
+            path.move(to: CGPoint(x: rect.maxX/2, y: rect.maxY/2))
+        }
+        if(centerDot){
+            path.addArc(center: CGPoint(x: rect.maxX/2, y: rect.maxY/2), radius: 4, startAngle: .degrees(0), endAngle: .degrees(360), clockwise: true)
+            path.addArc(center: CGPoint(x: rect.maxX/2, y: rect.maxY/2), radius: 2, startAngle: .degrees(0), endAngle: .degrees(360), clockwise: true)
+        }
         return path
     }
 }
@@ -23,11 +48,12 @@ struct Tile: View{
     @State var isPut = false;
     @Binding var turnCnt: Int;
     @State var tt = false;
+    var line: CrossLine;
     var body: some View{
         Rectangle()
             .fill(Color("Board"))
             .frame(width: 23, height: 23)
-            .overlay(CrossLine().stroke(Color.gray, lineWidth: 1))
+            .overlay(line.stroke(Color.gray, lineWidth: 2))
             .overlay{
                 if(isPut){
                     Circle()
