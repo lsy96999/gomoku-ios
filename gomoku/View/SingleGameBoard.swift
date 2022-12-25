@@ -8,6 +8,10 @@
 import SwiftUI
 
 
+enum CheckDirection{
+    case Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight
+}
+
 struct SingleGameBoard: View {
     @State var trunCnt = 1;
     @State var now =
