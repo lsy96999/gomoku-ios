@@ -143,10 +143,10 @@ struct SingleGameBoard: View {
     }
     func dropTheStone(){
         if(turnCnt % 2 == 0){
-            
             for (rI, r) in now.enumerated() {
                 for (cI, c) in r.enumerated() {
                     if c == 2 {
+                        turnCnt+=1
                         now[rI][cI] = 1
                         let res = BoardCalcUtils.checkBlackVictory(game: now, row: rI, col: cI)
                         print("b res : \(res)")
@@ -162,18 +162,19 @@ struct SingleGameBoard: View {
             for (rI, r) in now.enumerated() {
                 for (cI, c) in r.enumerated() {
                     if c == -2 {
+                        turnCnt+=1
                         now[rI][cI] = -1
                         let res = BoardCalcUtils.checkWhiteVictory(game: now, row: rI, col: cI)
                         print("w res : \(res)")
                         if(res){
                             self.endGame = true;
                             self.endTitle = "백"
+                            reset()
                         }
                     }
                 }
             }
         }
-        turnCnt+=1
     }
     
     func reset(){
