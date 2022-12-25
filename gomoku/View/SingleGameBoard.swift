@@ -8,21 +8,49 @@
 import SwiftUI
 
 
-struct ContentView: View {
-    @State var trunCnt = 0;
+struct SingleGameBoard: View {
+    @State var trunCnt = 1;
+    @State var now =
+            [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],]
+    let screenWidth = UIScreen.main.bounds.size.width
+    
     var body: some View {
         Grid(horizontalSpacing:0, verticalSpacing: 0){
-            ForEach(0..<16){cIndex in
+            ForEach(0..<17){cIndex in
                 GridRow{
-                    ForEach(0..<16){rIndex in
-                        if(cIndex == 0 && rIndex == 0){
+                    ForEach(0..<17){rIndex in
+                        if(cIndex == 0 && rIndex == 0
+                        || cIndex == 16 && rIndex == 0
+                        || cIndex == 0 && rIndex == 16
+                        || cIndex == 16 && rIndex == 16){
                             Text("")
                         } else if(cIndex == 0){
-                            Text("\(rIndex)").font(.system(size: 10))
+                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else if(rIndex == 0){
-                            Text("\(cIndex)").font(.system(size: 10))
+                            Text("\(cIndex)").font(.system(size: (screenWidth/16)/2))
+                        } else if(cIndex == 16){
+                            Text("")
+//                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
+                        } else if(rIndex == 16){
+                            Text("")
+//                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else {
-                            Tile(turnCnt: $trunCnt, line: CrossLine(
+//                            Text("\(now[rIndex-1][cIndex-1])")
+                            Tile(turnCnt: $trunCnt, status: $now[cIndex-1][rIndex-1], line: CrossLine(
                                 rmUp: cIndex == 1 ? true :false,
                                 rmDown: cIndex == 15 ? true:false,
                                 rmRight: rIndex == 15 ? true:false,
@@ -37,13 +65,33 @@ struct ContentView: View {
                     }
                 }
             }
-            
+        }
+        Button("reset"){
+            self.now = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],];
+            self.trunCnt = 1
+        }
+        .onAppear(){
+            print(screenWidth)
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct SingleGameBoard_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SingleGameBoard()
     }
 }

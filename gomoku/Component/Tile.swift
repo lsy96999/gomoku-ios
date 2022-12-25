@@ -45,27 +45,33 @@ struct CrossLine: Shape{
 }
 
 struct Tile: View{
-    @State var isPut = false;
     @Binding var turnCnt: Int;
-    @State var tt = false;
+    @Binding var status: Int;
     var line: CrossLine;
+    let screenWidth = UIScreen.main.bounds.size.width
+    
     var body: some View{
         Rectangle()
             .fill(Color("Board"))
-            .frame(width: 23, height: 23)
+            .frame(width: (screenWidth/16), height: (screenWidth/16))
             .overlay(line.stroke(Color.gray, lineWidth: 2))
             .overlay{
-                if(isPut){
+                if(status != 0){
                     Circle()
-                        .fill(tt ? Color("Black") : Color("White"))
-                        .frame(width: 20, height: 20)
+                        .fill(status == 1 ? Color("Black") : Color("White"))
+                        .frame(width: (screenWidth/16)*0.9, height: (screenWidth/16)*0.9)
                 }
             }
             .onTapGesture {
-                isPut = !isPut;
-                turnCnt+=1
-                tt = isTwo(trunCnt: turnCnt)
-                print(turnCnt)
+                if(status == 0){
+                    turnCnt+=1
+                    if(isTwo(trunCnt: turnCnt)){
+                        status = 1
+                    } else {
+                        status = -1
+                    }
+                    print(turnCnt)
+                }
             }
     }
     
