@@ -16,7 +16,7 @@ struct SingleGameBoard: View {
     
     @State var endGame = false;
     @State var endTitle = "";
-    @State var turnCnt = 1;
+    @State var turnCnt = 0;
     @State var now =
             [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -36,6 +36,10 @@ struct SingleGameBoard: View {
     let screenWidth = UIScreen.main.bounds.size.width
     
     var body: some View {
+        
+        Button("reset"){
+            reset()
+        }
         Grid(horizontalSpacing:0, verticalSpacing: 0){
             ForEach(0..<17){rIndex in
                 GridRow{
@@ -51,12 +55,9 @@ struct SingleGameBoard: View {
                             Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else if(rIndex == 16){
                             Text("")
-//                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else if(cIndex == 16){
                             Text("")
-//                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else {
-//                            Text("\(now[rIndex-1][cIndex-1])")
                             Tile(status: $now[rIndex-1][cIndex-1],line: CrossLine(
                                 rmUp: rIndex == 1 ? true :false,
                                 rmDown: rIndex == 15 ? true:false,
@@ -69,25 +70,39 @@ struct SingleGameBoard: View {
                                 || cIndex == 12 && rIndex == 12 ? true : false))
                             .onTapGesture{
                                 if(now[rIndex-1][cIndex-1] == 0){
-                                    turnCnt+=1
+//                                    turnCnt+=1
                                     if(turnCnt % 2 == 0){
-                                        now[rIndex-1][cIndex-1] = 1
-                                        let res = BoardCalcUtils.checkBlackVictory(game: now, row: rIndex-1, col: cIndex-1)
-                                        print("b res : \(res)")
-                                        if(res){
-                                            self.endGame = true;
-                                            self.endTitle = "흑"
-                                            reset()
+                                        for (rI, r) in now.enumerated() {
+                                            for (cI, c) in r.enumerated() {
+                                                if c == 2 {
+                                                    now[rI][cI] = 0
+                                                }
+                                            }
                                         }
+                                        now[rIndex-1][cIndex-1] = 2
+//                                        let res = BoardCalcUtils.checkBlackVictory(game: now, row: rIndex-1, col: cIndex-1)
+//                                        print("b res : \(res)")
+//                                        if(res){
+//                                            self.endGame = true;
+//                                            self.endTitle = "흑"
+//                                            reset()
+//                                        }
                                     } else {
-                                        now[rIndex-1][cIndex-1] = -1
-                                        let res = BoardCalcUtils.checkWhiteVictory(game: now, row: rIndex-1, col: cIndex-1)
-                                        print("w res : \(res)")
-                                        if(res){
-                                            self.endGame = true;
-                                            self.endTitle = "백"
-                                            reset()
+                                        for (rI, r) in now.enumerated() {
+                                            for (cI, c) in r.enumerated() {
+                                                if c == -2 {
+                                                    now[rI][cI] = 0
+                                                }
+                                            }
                                         }
+                                        now[rIndex-1][cIndex-1] = -2
+//                                        let res = BoardCalcUtils.checkWhiteVictory(game: now, row: rIndex-1, col: cIndex-1)
+//                                        print("w res : \(res)")
+//                                        if(res){
+//                                            self.endGame = true;
+//                                            self.endTitle = "백"
+//                                            reset()
+//                                        }
                                     }
                                     print(turnCnt)
                                 }
@@ -103,13 +118,62 @@ struct SingleGameBoard: View {
         } message: {
             Text("\(endTitle) 승")
         }
-        
-        Button("reset"){
-            reset()
+        HStack{
+            VStack{
+                Text("흑돌")
+                Circle().fill(Color("Black")).frame(width: 50, height: 50)
+            }
+            VStack{
+                Text("현재 ~턴")
+                HStack{
+                    VStack{
+                        Button("GG"){}
+                        Button("무르기요청"){}
+                    }
+                    Button("착수"){
+                        dropTheStone()
+                    }
+                }
+            }
         }
+        
         .onAppear(){
 //            print(screenWidth)
         }
+    }
+    func dropTheStone(){
+        if(turnCnt % 2 == 0){
+            
+            for (rI, r) in now.enumerated() {
+                for (cI, c) in r.enumerated() {
+                    if c == 2 {
+                        now[rI][cI] = 1
+                        let res = BoardCalcUtils.checkBlackVictory(game: now, row: rI, col: cI)
+                        print("b res : \(res)")
+                        if(res){
+                            self.endGame = true;
+                            self.endTitle = "흑"
+                            reset()
+                        }
+                    }
+                }
+            }
+        } else {
+            for (rI, r) in now.enumerated() {
+                for (cI, c) in r.enumerated() {
+                    if c == -2 {
+                        now[rI][cI] = -1
+                        let res = BoardCalcUtils.checkWhiteVictory(game: now, row: rI, col: cI)
+                        print("w res : \(res)")
+                        if(res){
+                            self.endGame = true;
+                            self.endTitle = "백"
+                        }
+                    }
+                }
+            }
+        }
+        turnCnt+=1
     }
     
     func reset(){

@@ -56,9 +56,17 @@ struct Tile: View{
             .overlay(line.stroke(Color.gray, lineWidth: 2))
             .overlay{
                 if(status != 0){
-                    Circle()
-                        .fill(status == 1 ? Color("Black") : Color("White"))
-                        .frame(width: (screenWidth/16)*0.9, height: (screenWidth/16)*0.9)
+                    if(status == 1 || status == -1){
+                        Circle()
+                            .fill(status == 1 ? Color("Black") : Color("White"))
+                            .frame(width: (screenWidth/16)*0.9, height: (screenWidth/16)*0.9)
+                    }else if(status == 2 || status == -2){
+                        Circle()
+                            .fill(status == 2 ? Color("Black") : Color("White"))
+                            .opacity(0.7)
+                            .frame(width: (screenWidth/16)*0.9, height: (screenWidth/16)*0.9)
+                    }
+                    
                 }
             }
     }
