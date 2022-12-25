@@ -45,7 +45,6 @@ struct CrossLine: Shape{
 }
 
 struct Tile: View{
-    @Binding var turnCnt: Int;
     @Binding var status: Int;
     var line: CrossLine;
     let screenWidth = UIScreen.main.bounds.size.width
@@ -62,24 +61,5 @@ struct Tile: View{
                         .frame(width: (screenWidth/16)*0.9, height: (screenWidth/16)*0.9)
                 }
             }
-            .onTapGesture {
-                if(status == 0){
-                    turnCnt+=1
-                    if(isTwo(trunCnt: turnCnt)){
-                        status = 1
-                    } else {
-                        status = -1
-                    }
-                    print(turnCnt)
-                }
-            }
-    }
-    
-    func isTwo(trunCnt: Int)->Bool{
-        if(trunCnt % 2 == 0){
-            return true
-        } else {
-            return false;
-        }
     }
 }

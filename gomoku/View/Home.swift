@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct Home: View {
+    let screenWidth = UIScreen.main.bounds.size.width
+    let screenHeight = UIScreen.main.bounds.size.height
     var body: some View {
         Text("HOME")
+        Text("width: \(screenWidth)")
+        Text("height: \(screenHeight)")
         NavigationLink("singleGame"){
             SingleGameBoard()
         }

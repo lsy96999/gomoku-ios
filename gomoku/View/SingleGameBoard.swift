@@ -13,7 +13,10 @@ enum CheckDirection{
 }
 
 struct SingleGameBoard: View {
-    @State var trunCnt = 1;
+    
+    @State var endGame = false;
+    @State var endTitle = "";
+    @State var turnCnt = 1;
     @State var now =
             [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -34,63 +37,98 @@ struct SingleGameBoard: View {
     
     var body: some View {
         Grid(horizontalSpacing:0, verticalSpacing: 0){
-            ForEach(0..<17){cIndex in
+            ForEach(0..<17){rIndex in
                 GridRow{
-                    ForEach(0..<17){rIndex in
-                        if(cIndex == 0 && rIndex == 0
-                        || cIndex == 16 && rIndex == 0
-                        || cIndex == 0 && rIndex == 16
-                        || cIndex == 16 && rIndex == 16){
+                    ForEach(0..<17){cIndex in
+                        if(rIndex == 0 && cIndex == 0
+                        || rIndex == 16 && cIndex == 0
+                        || rIndex == 0 && cIndex == 16
+                        || rIndex == 16 && cIndex == 16){
                             Text("")
-                        } else if(cIndex == 0){
-                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else if(rIndex == 0){
                             Text("\(cIndex)").font(.system(size: (screenWidth/16)/2))
-                        } else if(cIndex == 16){
+                        } else if(cIndex == 0){
+                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
+                        } else if(rIndex == 16){
                             Text("")
 //                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
-                        } else if(rIndex == 16){
+                        } else if(cIndex == 16){
                             Text("")
 //                            Text("\(rIndex)").font(.system(size: (screenWidth/16)/2))
                         } else {
 //                            Text("\(now[rIndex-1][cIndex-1])")
-                            Tile(turnCnt: $trunCnt, status: $now[cIndex-1][rIndex-1], line: CrossLine(
-                                rmUp: cIndex == 1 ? true :false,
-                                rmDown: cIndex == 15 ? true:false,
-                                rmRight: rIndex == 15 ? true:false,
-                                rmLeft: rIndex == 1 ? true:false,
-                                centerDot: rIndex == 4 && cIndex == 4
-                                || rIndex == 4 && cIndex == 12
-                                || rIndex == 8 && cIndex == 8
-                                || rIndex == 12 && cIndex == 4
-                                || rIndex == 12 && cIndex == 12 ? true : false))
+                            Tile(status: $now[rIndex-1][cIndex-1],line: CrossLine(
+                                rmUp: rIndex == 1 ? true :false,
+                                rmDown: rIndex == 15 ? true:false,
+                                rmRight: cIndex == 15 ? true:false,
+                                rmLeft: cIndex == 1 ? true:false,
+                                centerDot: cIndex == 4 && rIndex == 4
+                                || cIndex == 4 && rIndex == 12
+                                || cIndex == 8 && rIndex == 8
+                                || cIndex == 12 && rIndex == 4
+                                || cIndex == 12 && rIndex == 12 ? true : false))
+                            .onTapGesture{
+                                if(now[rIndex-1][cIndex-1] == 0){
+                                    turnCnt+=1
+                                    if(turnCnt % 2 == 0){
+                                        now[rIndex-1][cIndex-1] = 1
+                                        let res = BoardCalcUtils.checkBlackVictory(game: now, row: rIndex-1, col: cIndex-1)
+                                        print("b res : \(res)")
+                                        if(res){
+                                            self.endGame = true;
+                                            self.endTitle = "흑"
+                                            reset()
+                                        }
+                                    } else {
+                                        now[rIndex-1][cIndex-1] = -1
+                                        let res = BoardCalcUtils.checkWhiteVictory(game: now, row: rIndex-1, col: cIndex-1)
+                                        print("w res : \(res)")
+                                        if(res){
+                                            self.endGame = true;
+                                            self.endTitle = "백"
+                                            reset()
+                                        }
+                                    }
+                                    print(turnCnt)
+                                }
+                            }
                             
                         }
                     }
                 }
             }
         }
+        .alert("", isPresented: $endGame){
+            Button("OK"){}
+        } message: {
+            Text("\(endTitle) 승")
+        }
+        
         Button("reset"){
-            self.now = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],];
-            self.trunCnt = 1
+            reset()
         }
         .onAppear(){
-            print(screenWidth)
+//            print(screenWidth)
         }
+    }
+    
+    func reset(){
+        self.now = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],];
+        self.turnCnt = 1
     }
 }
 
