@@ -42,7 +42,7 @@ struct SingleGameBoard: View {
                 Circle().fill(Color("White")).frame(width: 50, height: 50)
             }
             VStack{
-                Text("현재 ~턴")
+                Text("현재 \(turnCnt+1)턴")
                 HStack{
                     VStack{
                         Button("GG"){}
@@ -57,6 +57,7 @@ struct SingleGameBoard: View {
                 }
             }
         }.rotationEffect(.degrees(180))
+            .background(turnCnt % 2 == 0 ? .white : .gray)
         
         Grid(horizontalSpacing:0, verticalSpacing: 0){
             ForEach(0..<17){rIndex in
@@ -142,7 +143,7 @@ struct SingleGameBoard: View {
                 Circle().fill(Color("Black")).frame(width: 50, height: 50)
             }
             VStack{
-                Text("현재 ~턴")
+                Text("현재 \(turnCnt+1)턴")
                 HStack{
                     VStack{
                         Button("GG"){}
@@ -156,7 +157,8 @@ struct SingleGameBoard: View {
                     }
                 }
             }
-        }
+            
+        }.background(turnCnt % 2 == 0 ? .gray : .white)
         
         .onAppear(){
 //            print(screenWidth)
