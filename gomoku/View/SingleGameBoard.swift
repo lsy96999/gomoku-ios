@@ -36,10 +36,28 @@ struct SingleGameBoard: View {
     let screenWidth = UIScreen.main.bounds.size.width
     
     var body: some View {
+        HStack{
+            VStack{
+                Text("백돌")
+                Circle().fill(Color("White")).frame(width: 50, height: 50)
+            }
+            VStack{
+                Text("현재 ~턴")
+                HStack{
+                    VStack{
+                        Button("GG"){}
+                        Button("무르기요청"){}
+                        Button("reset"){
+                            reset()
+                        }
+                    }
+                    Button("착수"){
+                        dropTheStone()
+                    }
+                }
+            }
+        }.rotationEffect(.degrees(180))
         
-        Button("reset"){
-            reset()
-        }
         Grid(horizontalSpacing:0, verticalSpacing: 0){
             ForEach(0..<17){rIndex in
                 GridRow{
@@ -129,6 +147,9 @@ struct SingleGameBoard: View {
                     VStack{
                         Button("GG"){}
                         Button("무르기요청"){}
+                        Button("reset"){
+                            reset()
+                        }
                     }
                     Button("착수"){
                         dropTheStone()
@@ -193,7 +214,7 @@ struct SingleGameBoard: View {
                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],];
-        self.turnCnt = 1
+        self.turnCnt = 0
     }
 }
 
