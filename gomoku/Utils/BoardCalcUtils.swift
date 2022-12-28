@@ -7,7 +7,7 @@
 
 import Foundation
 class BoardCalcUtils{
-    static func getBoardDirectionLine(game: [[Int]], direction: CheckDirection, row: Int, col: Int) -> [Int]{
+    static func getBoardDirectionLine(game: [[Int]], direction: CheckDirection, row: Int, col: Int) -> [[Int]]{
         var rw = 0;
         if(direction == .Up
            || direction == .UpLeft
@@ -31,26 +31,26 @@ class BoardCalcUtils{
         }
         
         if(rw == 1 && row == 14){
-            return [game[row][col]]
+            return [[game[row][col], row, col]]
         } else if(rw == -1 && row == 0){
-            return [game[row][col]]
+            return [[game[row][col], row, col]]
         } else if(cw == 1 && col == 14){
-            return [game[row][col]]
+            return [[game[row][col], row, col]]
         } else if(cw == -1 && col == 0){
-            return [game[row][col]]
+            return [[game[row][col], row, col]]
         } else {
             let calR = row + rw;
             let calC = col + cw;
             var aa = getBoardDirectionLine(game: game, direction: direction, row: calR, col: calC)
-            aa.insert(game[row][col], at: 0)
+            aa.insert([game[row][col], row, col], at: 0)
             
 //            print("calR: \(calR), calC:\(calC), game: \(game[calR][calC]), aa: \(aa)")
             return aa
         }
     }
     
-    static func directionConcat(_ a: [Int], _ b: [Int]) -> [Int]{
-        var a = a;
+    static func directionConcat(_ a: [[Int]], _ b: [[Int]]) -> [[Int]]{
+        let a = a;
         var b = b;
         
         b.remove(at: 0);
@@ -58,7 +58,7 @@ class BoardCalcUtils{
         return b + a
     }
     
-    static func checkBlackVictory(game: [[Int]], row: Int, col: Int) -> Bool{
+    static func checkBlackVictory(game: [[Int]], row: Int, col: Int) -> [[Int]]?{
         let up = getBoardDirectionLine(game: game, direction: .Up, row: row, col: col)
         let down = getBoardDirectionLine(game: game, direction: .Down, row: row, col: col)
         
@@ -86,23 +86,43 @@ class BoardCalcUtils{
         print("drl: \(drl)");
         let ds = [ud, rl, url, drl]
         for d in ds {
-            for a in d.split(separator: 0){
-                for b in a.split(separator: -1){
-                    let sums = b.filter{ a in
-                        return a == 1
-                    }.reduce(0){(p,a) in
-                        return p+a
-                    }
-                    if(sums == 5){
-                        return true
-                    }
+            var cnt = 0;
+            var firstIdx = 0;
+            var lastIdx = 0;
+            for (aIdx, a)in d.enumerated(){
+                if a[0] == 1{
+                    cnt+=1;
+                } else {
+                    cnt = 0
+                }
+                if(cnt == 1){
+                    firstIdx = aIdx
+                }
+                if(cnt == 5) {
+                    lastIdx = aIdx
+                    return Array(d[firstIdx...lastIdx])
                 }
             }
+            
+            
+            
+//            for a in d.split(separator: 0){
+//                for b in a.split(separator: -1){
+//                    let sums = b.filter{ a in
+//                        return a == 1
+//                    }.reduce(0){(p,a) in
+//                        return p+a
+//                    }
+//                    if(sums == 5){
+//                        return true
+//                    }
+//                }
+//            }
         }
-        return false;
+        return nil;
     }
     
-    static func checkWhiteVictory(game: [[Int]], row: Int, col: Int) -> Bool{
+    static func checkWhiteVictory(game: [[Int]], row: Int, col: Int) -> [[Int]]?{
         let up = getBoardDirectionLine(game: game, direction: .Up, row: row, col: col)
         let down = getBoardDirectionLine(game: game, direction: .Down, row: row, col: col)
         
@@ -130,19 +150,36 @@ class BoardCalcUtils{
         print("drl: \(drl)");
         let ds = [ud, rl, url, drl]
         for d in ds {
-            for a in d.split(separator: 0){
-                for b in a.split(separator: 1){
-                    let sums = b.filter{ a in
-                        return a == -1
-                    }.reduce(0){(p,a) in
-                        return p+a
-                    }
-                    if(sums == -5){
-                        return true
-                    }
+            var cnt = 0;
+            var firstIdx = 0;
+            var lastIdx = 0;
+            for (aIdx, a)in d.enumerated(){
+                if a[0] == -1{
+                    cnt+=1;
+                } else {
+                    cnt = 0
+                }
+                if(cnt == 1){
+                    firstIdx = aIdx
+                }
+                if(cnt == 5) {
+                    lastIdx = aIdx
+                    return Array(d[firstIdx...lastIdx])
                 }
             }
+//            for a in d.split(separator: 0){
+//                for b in a.split(separator: 1){
+//                    let sums = b.filter{ a in
+//                        return a == -1
+//                    }.reduce(0){(p,a) in
+//                        return p+a
+//                    }
+//                    if(sums == -5){
+//                        return true
+//                    }
+//                }
+//            }
         }
-        return false;
+        return nil;
     }
 }

@@ -15,6 +15,7 @@ enum CheckDirection{
 struct SingleGameBoard: View {
     
     @State var endGame = false;
+    @State var endPresent = false;
     @State var endTitle = "";
     @State var turnCnt = 0;
     @State var now =
@@ -88,6 +89,7 @@ struct SingleGameBoard: View {
                                 || cIndex == 12 && rIndex == 4
                                 || cIndex == 12 && rIndex == 12 ? true : false))
                             .onTapGesture{
+                                if(endGame) {return;}
                                 if(now[rIndex-1][cIndex-1] == 0){
 //                                    turnCnt+=1
                                     if(turnCnt % 2 == 0){
@@ -132,11 +134,13 @@ struct SingleGameBoard: View {
                 }
             }
         }
-        .alert("", isPresented: $endGame){
+        .alert("", isPresented: $endPresent){
             Button("OK"){}
         } message: {
             Text("\(endTitle) 승")
         }
+        
+        
         HStack{
             VStack{
                 Text("흑돌")
@@ -165,6 +169,7 @@ struct SingleGameBoard: View {
         }
     }
     func dropTheStone(){
+        if(endGame) {return;}
         if(turnCnt % 2 == 0){
             for (rI, r) in now.enumerated() {
                 for (cI, c) in r.enumerated() {
@@ -172,11 +177,15 @@ struct SingleGameBoard: View {
                         turnCnt+=1
                         now[rI][cI] = 1
                         let res = BoardCalcUtils.checkBlackVictory(game: now, row: rI, col: cI)
-                        print("b res : \(res)")
-                        if(res){
+                        print("b res : \(res ?? [[0]])")
+                        if let ress = res{
                             self.endGame = true;
+                            self.endPresent = true;
                             self.endTitle = "흑"
-                            reset()
+//                            reset()
+                            for a in ress{
+                                now[a[1]][a[2]] = 3
+                            }
                         }
                     }
                 }
@@ -188,11 +197,15 @@ struct SingleGameBoard: View {
                         turnCnt+=1
                         now[rI][cI] = -1
                         let res = BoardCalcUtils.checkWhiteVictory(game: now, row: rI, col: cI)
-                        print("w res : \(res)")
-                        if(res){
+                        print("w res : \(res ?? [[0]])")
+                        if let ress = res{
                             self.endGame = true;
+                            self.endPresent = true;
                             self.endTitle = "백"
-                            reset()
+//                            reset()
+                            for a in ress{
+                                now[a[1]][a[2]] = -3
+                            }
                         }
                     }
                 }
@@ -217,6 +230,7 @@ struct SingleGameBoard: View {
                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],];
         self.turnCnt = 0
+        self.endGame = false
     }
 }
 
